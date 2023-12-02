@@ -1,12 +1,18 @@
 * {
   box-sizing: border-box;
-  font-family: 'Karla', sans-serif;
+  /* font-family: 'Karla', sans-serif; */
+  font-family:  'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 14px;
 }
 
-body {
+body, html, #root, .main {
   margin: 0;
   padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #FA993E;
+
+  
 }
 .main {
   text-align: center;
@@ -17,23 +23,21 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  
+ 
 }
 .my-canvas {
   
-  width: 100%;
-  height: 100%;
+
   border: 1px solid #000;
   background: #000;
   position: relative;
 }
 .wrapper {
-  min-width: 240px;
-  min-height: 240px;
-  max-width: 600px;
-  max-height: 600px;
-  width: 40vw;
-  height: 40vw;
+ /*  min-width: 272px;
+  min-height: 272px;
+  max-width: 630px;
+  max-height: 630px; */
+ 
 }
 .start-btn {
   cursor: pointer;
@@ -66,13 +70,16 @@ body {
 }
 .back-red {
   background: rgba(238, 52, 6, 0.9);
+  padding-bottom: 4px;
 }
 .dot-toolbar {
-  gap: 20px;
-  display: flex;
+  gap: 2px;
+  display: inline-flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 3px;
+  justify-content: end;
+  height: 30px;
+  /* width: calc(100% + 30px); */
+  width: 100%;
 }
 
 .tri-params-wrapper {
@@ -82,6 +89,8 @@ body {
 .tri-slider {
   display: flex;
   flex-direction: column;
+  width: 30px;
+  align-items: center;
 }
 .footer {
   display: flex;
@@ -89,58 +98,24 @@ body {
   justify-content: flex-end;  
 }
 
-/* sliders */
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-  border: 1px solid #000000;
-  height: 16px;
-  width: 16px;
-  cursor: pointer;
-  margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
-  border-radius: 0;
+
+/*************** sliders ***************/
+.start-range-vertical {
+  appearance: slider-vertical;
+  accent-color: black;
+
 }
-/* All the same stuff for Firefox */
-input[type=range]::-moz-range-thumb {
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-  border: 1px solid #000000;
-  height: 16px;
-  width: 16px;
-  cursor: pointer;
-  border-radius: 0;
+.start-range {
+  accent-color: black;
 }
 
-/* All the same stuff for IE */
-input[type=range]::-ms-thumb {
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-  border: 1px solid #000000;
-  height: 16px;
-  width: 16px;
-  border-radius: 0;
-  cursor: pointer;
+.help {
+  background: #68c283;
 }
-
-input[type=range] {
-  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
-  width: 80%; /* Specific width is required for Firefox. */
+.help-content {
   
-  background: #000; /* Otherwise white in Chrome */
 }
-
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-}
-
-input[type=range]:focus {
-  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
-}
-
-input[type=range]::-ms-track {
-  width: 80%;
-  cursor: pointer;
-
-  /* Hides the slider so custom styles can be added */
-  background: transparent; 
-  border-color: transparent;
-  color: transparent;
+.txt12 {
+  font-size: 12px;
+  font-weight: 400;
 }
