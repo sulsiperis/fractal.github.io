@@ -5,7 +5,7 @@
   font-size: 14px;
 }
 
-body, html, #root, .main {
+body, html, #root {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -14,19 +14,23 @@ body, html, #root, .main {
 
   
 }
-.main {
-  text-align: center;
-}
 
 /* --------------------------- */
+.main-wrapper {
+ /*  background: red; */
+/*   display: block;
+  min-width: 666px; */
+}
+
 .main {
   display: flex;
   flex-direction: column;
   align-items: center;
- 
+  text-align: center;
+  min-width: 100px;
 }
-.my-canvas {
-  
+
+.my-canvas { 
 
   border: 1px solid #000;
   background: #000;
@@ -37,18 +41,20 @@ body, html, #root, .main {
   min-height: 272px;
   max-width: 630px;
   max-height: 630px; */
+  /* background: teal; */
  
 }
 .start-btn {
   cursor: pointer;
-  width: 20px; 
-  height: 20px;
-  margin: 2px;
+  width: 36px; 
+  height: 36px;
+  margin: 4px;
   background: transparent;
   border: 1px ridge #000;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
 }
 .start-btn:hover, .start-select:hover {
   box-shadow: inset 0px 0px 6px 2px #000;
@@ -77,7 +83,7 @@ body, html, #root, .main {
   display: inline-flex;
   align-items: center;
   justify-content: end;
-  height: 30px;
+  height: 40px;
   /* width: calc(100% + 30px); */
   width: 100%;
 }
@@ -85,19 +91,51 @@ body, html, #root, .main {
 .tri-params-wrapper {
   display: flex;
   flex-direction: row;
+  width: 100%;
+  height: calc(100% - 80px);
 }
-.tri-slider {
+.tri-toolbar {
   display: flex;
   flex-direction: column;
-  width: 30px;
+  width: 40px;
   align-items: center;
 }
 .footer {
   display: flex;
   align-items: center;
-  justify-content: flex-end;  
+  justify-content: space-between;  
+  height: 40px;
+}
+.footer-buttons {
+  display: flex;
+  margin-left: 40px;
+}
+.tooltip, .tooltip-inner, .tooltip-arrow, .tooltip-start {
+ /*  background-color: white !important;
+  color: #000 !important; */
 }
 
+
+/* .tooltip > div.tooltip-inner {
+  background-color: #fff !important;
+  color: #000 !important;
+}
+
+.tooltip.show {
+  opacity: 1 !important;
+}
+
+.tooltip > div.arrow::before {
+  border-bottom-color: #fff!important;
+  color: #000 !important;
+} */
+.tooltip > div.tooltip-inner {
+  --bs-tooltip-bg: white;
+  --bs-tooltip-color: #000;
+}
+.tooltip-arrow {
+  --bs-tooltip-bg: white;
+}
 
 /*************** sliders ***************/
 .start-range-vertical {
