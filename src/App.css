@@ -17,13 +17,18 @@ body, html, #root {
 
 /* --------------------------- */
 .main-wrapper {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
  /*  background: red; */
 /*   display: block;
   min-width: 666px; */
+  margin-top: 8px;
 }
 
 .main {
-  display: flex;
+  /* display: flex; */
   flex-direction: column;
   align-items: center;
   text-align: center;
@@ -78,27 +83,30 @@ body, html, #root {
   background: rgba(238, 52, 6, 0.9);
   padding-bottom: 4px;
 }
+.tri-params-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100% - 120px);
+}
 .dot-toolbar {
   gap: 2px;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: end;
   height: 40px;
   /* width: calc(100% + 30px); */
   width: 100%;
+  gap: 2px;
 }
 
-.tri-params-wrapper {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: calc(100% - 80px);
-}
 .tri-toolbar {
   display: flex;
-  flex-direction: column;
-  width: 40px;
+  flex-direction: row;
+  height: 40px;
   align-items: center;
+  justify-content: end;
+  gap: 2px;
 }
 .footer {
   display: flex;
@@ -110,20 +118,19 @@ body, html, #root {
   display: flex;
   margin-left: 40px;
 }
-.tooltip, .tooltip-inner, .tooltip-arrow, .tooltip-start {
- /*  background-color: white !important;
-  color: #000 !important; */
+.tooltip * {
+  font-size: 10px !important;
 }
 
+
+/************* Tooltips ****************/
 
 /* .tooltip > div.tooltip-inner {
   background-color: #fff !important;
   color: #000 !important;
 }
 
-.tooltip.show {
-  opacity: 1 !important;
-}
+
 
 .tooltip > div.arrow::before {
   border-bottom-color: #fff!important;
@@ -136,15 +143,14 @@ body, html, #root {
 .tooltip-arrow {
   --bs-tooltip-bg: white;
 }
-
-/*************** sliders ***************/
-.start-range-vertical {
-  appearance: slider-vertical;
-  accent-color: black;
-
+.tooltip.show {
+  opacity: 0.8 !important;
 }
+/*************** sliders ***************/
+
 .start-range {
   accent-color: black;
+  width: 100%;
 }
 
 .help {

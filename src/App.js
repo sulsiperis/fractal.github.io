@@ -5,6 +5,8 @@ import { Triangle } from './func/triangle_class';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Overlay from 'react-bootstrap//Overlay';
 import Tooltip from 'react-bootstrap/Tooltip';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
 function App() {
   const [dotNum, setDotNum] = React.useState(1)
@@ -17,7 +19,8 @@ function App() {
   const [maxTriSize, setMaxTriSize] = React.useState(30)
   const [showHelp, setShowHelp] = React.useState(false)
   const [showToolTips, setShowToolTips] = React.useState(false)
-
+  const [confirmClear, setConfirmClear] = React.useState(false)
+  const [showModal, setShowModal] = React.useState(false)
 
   const handleHelpClose = () => setShowHelp(false)
   const handleHelpShow = () => setShowHelp(true)
@@ -98,11 +101,21 @@ function App() {
     }  
   }, [tempStartPos])
 
+  //initial drawing of triangle on canvas
   React.useEffect(() => {
     triangle2()
   }, [])
 
-
+  //hide tooltips after some time
+  React.useEffect(() => {
+      resetTooltips()
+  }, [showToolTips])
+  
+  function resetTooltips() {
+    setTimeout(() => {
+      setShowToolTips(false)
+    }, 1000*12);
+  }
   function getZoomedStartPos(rawStartPos, canv) {
     let newStartPos
       const widthStr = canv.current.style.width
@@ -133,8 +146,8 @@ function App() {
       new_height = vw / 100 * 70;  
     }
 
-    console.log("viewport: ", vw, vh)
-    console.log(new_width, new_height)
+    //console.log("viewport: ", vw, vh)
+    //console.log(new_width, new_height)
 
     //const new_width = window.innerWidth / 100 * 40;
     //const new_height = window.innerWidth / 100 * 40;
@@ -190,7 +203,6 @@ function App() {
         return t3.pointC
       }
     }
-    return Math.floor((Math.random() * 3)+1)
   }
 
   //console.log("virsune", randVertex())
@@ -273,7 +285,15 @@ function App() {
     //console.log("finnished")
   }
 
+  function handleReset(state) {
+    setConfirmClear(state)
+    setShowModal(false)
+  }
+
   function handleClearClick() {
+    setShowModal(true)
+    modal("Are you sure you want to clear canvas?", handleReset(true), handleReset(false))
+   // if (confirmClear) {
     if (window.confirm('Are you sure you want to clear canvas?')) {
       clear(); 
       zoom("reset"); 
@@ -301,7 +321,7 @@ function App() {
   function zoom2(opt="in", minSize=280, maxSize=1000) { 
     const widthStr = wrapper.current.style.width    
     const styleWidth = widthStr!==""?Number(widthStr.slice(0, widthStr.length - 2)):cnv.current.width+40
-    console.log(styleWidth)
+    //console.log(styleWidth)
     switch (opt) {
       case "in": {
         if (styleWidth < maxSize) {
@@ -389,19 +409,38 @@ function App() {
     )
   }
 
+  function modal(text, cb_confirm, cb_cancel) {
+
+    return (
+      <Modal show={showModal} onHide={cb_cancel}>
+        <Modal.Header closeButton>          
+        </Modal.Header>
+        <Modal.Body>{text}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={cb_cancel}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={cb_confirm}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    )
+  }
+
   return (
     <div className='main-wrapper' data-bs-theme='light'>
 
       {tooltip(btn_tri, "right", "Draw triangle or vertices")}
       {tooltip(btn_dots, "bottom", "Start drawing dots")}
-      {tooltip(btn_zoomin, "top", "Zoom in")}
+      {tooltip(btn_zoomin, "right", "Zoom in")}
       {tooltip(btn_zoomout, "bottom", "Zoom out")}
-      {tooltip(btn_clear, "left", "Clear canvas and reset zoom")}
+      {tooltip(btn_clear, "top", "Clear canvas/reset zoom")}
       {tooltip(btn_help, "top", "Help / about")}
-      {tooltip(slider_dots, "left", "Amount of dots")}
-      {tooltip(slider_tri, "top", "Size of triangle")}
+      {tooltip(slider_dots, "bottom", "Amount of dots")}
+      {tooltip(slider_tri, "bottom", "Size of triangle")}
 
-
+      
 
       <div className='main'>
         <Offcanvas show={showHelp} onHide={handleHelpClose} placement='start' >
@@ -422,54 +461,58 @@ function App() {
             <p style={{display: "flex", justifyContent: "center"}}><strong>Made by Sulsiperis 2023</strong></p>
           </Offcanvas.Body>
         </Offcanvas>
+
         <div className='wrapper' ref={wrapper}>
-          <div className='dot-toolbar'>
-            <input 
-              type='range' 
-              min={1} max={999} 
-              className='start-range' 
-              name='dotNumber' 
-              disabled={working?true:false} 
-              value={dotNum} 
-              onChange={handleDotNumChange}
-              ref={slider_dots}
-            />
-            <label htmlFor="dotNumber">{dotNum}</label>            
-            <button 
-              ref={btn_dots}
-              disabled={working?true:false} 
-              className='start-btn' 
-              onClick={() => dots2(dotNum)} 
-              style={{background: 'transparent', 
-              border: "1px solid #000"  }}
-            ><strong>·</strong></button>            
-          </div>
           <div className='tri-params-wrapper'>
             <div className='tri-toolbar'>
+              <div>
+                <button disabled={working?true:false} ref={btn_tri} className='start-btn' onClick={() => triangle2()} ><strong>Δ</strong></button>
+              </div>
               <input
                 ref={slider_tri} 
-                type='range' 
-                orient='vertical' 
+                type='range'                 
                 min={30} max={maxTriSize} 
-                className='start-range-vertical' 
+                className='start-range' 
                 name='triangleSize' 
                 disabled={working?true:false} 
                 value={triangleSize} 
                 onChange={handleTriSizeChange} 
               />
-              <label htmlFor="triangleSize">{triangleSize}</label>
-              <button disabled={working?true:false} ref={btn_tri} className='start-btn' onClick={() => triangle2()} ><strong>Δ</strong></button>
+              <label htmlFor="triangleSize">{triangleSize}</label>              
             </div>
-
-            <canvas className='my-canvas' id="my-canvas" ref={cnv}></canvas>
-
+            <div className='dot-toolbar'>
+              <input 
+                type='range' 
+                min={1} max={999} 
+                className='start-range' 
+                name='dotNumber' 
+                disabled={working?true:false} 
+                value={dotNum} 
+                onChange={handleDotNumChange}
+                ref={slider_dots}
+              />
+              <label htmlFor="dotNumber">{dotNum}</label>
+              <div>           
+                <button 
+                  ref={btn_dots}
+                  disabled={working?true:false} 
+                  className='start-btn' 
+                  onClick={() => dots2(dotNum)} 
+                  style={{background: 'transparent', 
+                  border: "1px solid #000"  }}
+                ><strong>·</strong></button>
+              </div>
+            </div>
           </div>
+          
+          <canvas className='my-canvas' id="my-canvas" ref={cnv}></canvas>
+          
           <div className='footer'>
             <div className='footer-buttons'>
               <button ref={btn_help} className='start-btn help' onClick={() => {handleHelpShow()}}><strong>?</strong></button>
               <button className='start-btn help' onClick={() => {setShowToolTips(!showToolTips)}}><strong>...</strong></button>
-              <button ref={btn_zoomout} disabled={working?true:false} className='start-btn' onClick={() => {zoom2("out")}}><strong>-</strong></button>
-              <button ref={btn_zoomin} disabled={working?true:false} className='start-btn' onClick={() => {zoom2("in")}}><strong>+</strong></button>
+              <button ref={btn_zoomout} disabled={working?true:false} className='start-btn' onClick={() => {zoom("out")}}><strong>-</strong></button>
+              <button ref={btn_zoomin} disabled={working?true:false} className='start-btn' onClick={() => {zoom("in")}}><strong>+</strong></button>
             </div>
             <button ref={btn_clear} disabled={working?true:false} className='start-btn back-red' onClick={() => {handleClearClick()}}><strong>x</strong></button>
           </div>
