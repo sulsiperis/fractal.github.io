@@ -146,8 +146,12 @@ body, html, #root {
 .tooltip.show {
   opacity: 0.8 !important;
 }
-/*************** sliders ***************/
+/*************** about/help ***************/
+.offcanvas {
+  --bs-body-bg: rgb(255, 213, 134);
+}
 
+/*************** sliders ***************/
 .start-range {
   accent-color: black;
   width: 100%;
