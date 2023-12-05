@@ -22,6 +22,11 @@ function App() {
   const [confirmClear, setConfirmClear] = React.useState(false)
   const [showModal, setShowModal] = React.useState(false)
 
+  const [show, setShow] = React.useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   const handleHelpClose = () => setShowHelp(false)
   const handleHelpShow = () => setShowHelp(true)
 
@@ -441,6 +446,20 @@ function App() {
       {tooltip(slider_tri, "bottom", "Size of triangle")}
 
       
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Warning!</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to clear canvas and reset zoom?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       <div className='main'>
         <Offcanvas show={showHelp} onHide={handleHelpClose} placement='start' >
@@ -514,7 +533,7 @@ function App() {
               <button ref={btn_zoomout} disabled={working?true:false} className='start-btn' onClick={() => {zoom("out")}}><strong>-</strong></button>
               <button ref={btn_zoomin} disabled={working?true:false} className='start-btn' onClick={() => {zoom("in")}}><strong>+</strong></button>
             </div>
-            <button ref={btn_clear} disabled={working?true:false} className='start-btn back-red' onClick={() => {handleClearClick()}}><strong>x</strong></button>
+            <button ref={btn_clear} disabled={working?true:false} className='start-btn back-red' onClick={() => {handleShow()}}><strong>x</strong></button>
           </div>
         </div>
         
