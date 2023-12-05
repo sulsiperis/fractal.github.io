@@ -19,8 +19,8 @@ function App() {
   const [maxTriSize, setMaxTriSize] = React.useState(30)
   const [showHelp, setShowHelp] = React.useState(false)
   const [showToolTips, setShowToolTips] = React.useState(false)
-  const [confirmClear, setConfirmClear] = React.useState(false)
-  const [showModal, setShowModal] = React.useState(false)
+
+
 
   const handleHelpClose = () => setShowHelp(false)
   const handleHelpShow = () => setShowHelp(true)
@@ -285,14 +285,10 @@ function App() {
     //console.log("finnished")
   }
 
-  function handleReset(state) {
-    setConfirmClear(state)
-    setShowModal(false)
-  }
+
 
   function handleClearClick() {
-    setShowModal(true)
-    modal("Are you sure you want to clear canvas?", handleReset(true), handleReset(false))
+
    // if (confirmClear) {
     if (window.confirm('Are you sure you want to clear canvas?')) {
       clear(); 
@@ -409,24 +405,7 @@ function App() {
     )
   }
 
-  function modal(text, cb_confirm, cb_cancel) {
-
-    return (
-      <Modal show={showModal} onHide={cb_cancel}>
-        <Modal.Header closeButton>          
-        </Modal.Header>
-        <Modal.Body>{text}</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={cb_cancel}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={cb_confirm}>
-            Yes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    )
-  }
+  
 
   return (
     <div className='main-wrapper' data-bs-theme='light'>
