@@ -533,7 +533,7 @@ function App() {
               <button ref={btn_zoomout} disabled={working?true:false} className='start-btn' onClick={() => {zoom("out")}}><strong>-</strong></button>
               <button ref={btn_zoomin} disabled={working?true:false} className='start-btn' onClick={() => {zoom("in")}}><strong>+</strong></button>
             </div>
-            <button ref={btn_clear} disabled={working?true:false} className='start-btn back-red' onClick={() => {handleShow()}}><strong>x</strong></button>
+            <button ref={btn_clear} disabled={working?true:false} className='start-btn back-red' onClick={() => {handleClearClick()}}><strong>x</strong></button>
           </div>
         </div>
         
