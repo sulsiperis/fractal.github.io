@@ -22,6 +22,11 @@ function App() {
 
 
 
+  const [show, setShow] = React.useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   const handleHelpClose = () => setShowHelp(false)
   const handleHelpShow = () => setShowHelp(true)
 
@@ -420,6 +425,20 @@ function App() {
       {tooltip(slider_tri, "bottom", "Size of triangle")}
 
       
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Warning!</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to clear canvas and reset zoom?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       <div className='main'>
         <Offcanvas show={showHelp} onHide={handleHelpClose} placement='start' >
