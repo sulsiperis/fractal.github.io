@@ -1,4 +1,4 @@
-This App is my study of Sierpinsky triangle (Chaos game).
+This App is my study of Sierpinsky triangle (Chaos game). Made with React.
 
 In the project directory, you can run:
 
