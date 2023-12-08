@@ -148,7 +148,7 @@ body, html, #root {
 }
 /*************** about/help ***************/
 .offcanvas {
-  --bs-body-bg: rgb(255, 213, 134);
+  --bs-body-bg: rgb(255, 213, 136);
 }
 
 /*************** sliders ***************/
