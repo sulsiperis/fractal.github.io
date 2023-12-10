@@ -439,7 +439,7 @@ function App() {
           </Button>
         </Modal.Footer>
       </Modal>
-
+{/* pridetas tekstas patikrinti git ammend oi pakeiciau */}
       <div className='main'>
         <Offcanvas show={showHelp} onHide={handleHelpClose} placement='start' >
           <Offcanvas.Header closeButton>
