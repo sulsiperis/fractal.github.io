@@ -5,8 +5,7 @@ import { Triangle } from './func/triangle_class';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Overlay from 'react-bootstrap//Overlay';
 import Tooltip from 'react-bootstrap/Tooltip';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
+import Dialog from './components/Dialog';
 
 function App() {
   const [dotNum, setDotNum] = React.useState(1)
@@ -20,12 +19,17 @@ function App() {
   const [showHelp, setShowHelp] = React.useState(false)
   const [showToolTips, setShowToolTips] = React.useState(false)
 
-
-
   const [show, setShow] = React.useState(false);
+  const [confirmFunc, setConfirmFunc] = React.useState();
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = () => {
+    setShow(false);
+    setConfirmFunc()
+  }
+  const handleShow = (text, func) => {
+    setShow(text);
+    setConfirmFunc(()=> () => func);
+  }
 
   const handleHelpClose = () => setShowHelp(false)
   const handleHelpShow = () => setShowHelp(true)
@@ -41,7 +45,6 @@ function App() {
   const btn_clear = React.useRef()
   const slider_dots = React.useRef()
   const slider_tri = React.useRef()
-
 
   //mouse coord event
   React.useEffect(() => {
@@ -64,15 +67,9 @@ function App() {
 
   //set canvas size due to windows resize
   React.useEffect(() => {
-   /*  window.addEventListener("resize", function() {      
-      resizeCanvas()
-      //console.log(canv.height)
-    }) */
-    resizeCanvas(true)
+     resizeCanvas(true)
   }, [])
 
-  //console.log(startPos)
-  //console.log(cnv.current)
   //triangle size change hook
   React.useEffect(() => {
     const t3 = new Triangle(cnv, Number(triangleSize), true, "canvas")
@@ -83,29 +80,19 @@ function App() {
   React.useEffect(() => {
     if (!working) {
       if(lastPos) {
-        if (window.confirm("Are you sure you want to set new start point? This will erase all data.")) {
-          clear()
-          setStartPos(getZoomedStartPos(tempStartPos, cnv))          
-          setClickCount(0)
-          //triangle2(false)
-          drawPoint(getZoomedStartPos(tempStartPos, cnv))
-        } else {
-          
-        }
+        handleShow("Are you sure you want to set a new start point? This will erase all data.", handleNewStartPos)        
       } else {        
-        //clickCount<1 && clear()
         if (startPos) {
           clear()
           setClickCount(0)
         }        
         setStartPos(getZoomedStartPos(tempStartPos, cnv))        
-        
         //triangle2(false)
         drawPoint(getZoomedStartPos(tempStartPos, cnv))
       }
     }  
   }, [tempStartPos])
-
+  
   //initial drawing of triangle on canvas
   React.useEffect(() => {
     triangle2()
@@ -150,12 +137,7 @@ function App() {
       new_width = vw / 100 * 70;
       new_height = vw / 100 * 70;  
     }
-
-    //console.log("viewport: ", vw, vh)
-    //console.log(new_width, new_height)
-
-    //const new_width = window.innerWidth / 100 * 40;
-    //const new_height = window.innerWidth / 100 * 40;
+   
     if (new_width <= 630 && new_width >= 240)  {
 
       canv.width = new_width
@@ -180,7 +162,6 @@ function App() {
       const ctx = cnv.current.getContext("2d")
       ctx.fillStyle=color
       ctx.fillRect(point.x,point.y,size,size)
-      //ctx.fillRect(590,590,3,3)
     }
   }
 
@@ -210,10 +191,7 @@ function App() {
     }
   }
 
-  //console.log("virsune", randVertex())
-
- 
-
+  
   function triangle2(visible=true) {    
     const cnt = clickCount + 1
     const t2 = new Triangle(cnv, Number(triangleSize), true, "canvas")    
@@ -227,7 +205,6 @@ function App() {
     t2.centerColor = "#f5acac"
     if(visible) {
       if (cnt===1) {
-        //console.log(triangleSize)
         t2.draw()
         setClickCount(oldval => oldval + 1 )
       } else if (cnt===2) {
@@ -247,7 +224,6 @@ function App() {
       setWorking(true)
       const ctx = cnv.current.getContext("2d")
       ctx.beginPath()
-      // ctx.moveTo(startPos.x, startPos.y)
       let start
       if (lastPos) {
         start = ({x: lastPos.x, y: lastPos.y})
@@ -255,7 +231,7 @@ function App() {
         start = ({x: startPos.x, y: startPos.y})
       }
 
-
+     // delay function for drawing dots
       function countDown(i) {
         const int = setInterval(() => {
           const rvertex = randVertex()
@@ -264,8 +240,6 @@ function App() {
           const halfLine = fullLine/2
           const t = halfLine/fullLine
           const halfPoint = {x: (1-t)*start.x + t*rvertex.x , y: (1-t)*start.y + t*rvertex.y }
-
-
           ctx.fillStyle = "#FA993E"
           ctx.fillRect(halfPoint.x,halfPoint.y,1,1)
           start.x = halfPoint.x
@@ -276,13 +250,10 @@ function App() {
             setWorking(false)
             setLastPos(halfPoint)
           }
-          
-          
         }, 1);
       }
       countDown(number);
-
-      ctx.closePath()
+      ctx.closePath();
     } else {
       alert("Mark a start point anywhere inside the triangle.")
     }
@@ -293,15 +264,19 @@ function App() {
 
 
   function handleClearClick() {
-
-   // if (confirmClear) {
-    if (window.confirm('Are you sure you want to clear canvas?')) {
-      clear(); 
-      zoom("reset"); 
-      setClickCount(0); 
-      setStartPos()
-    }
-    
+    clear(); 
+    zoom("reset"); 
+    setClickCount(0); 
+    setStartPos();
+    handleClose();
+  }
+  function handleNewStartPos() {
+    clear();
+    setStartPos(getZoomedStartPos(tempStartPos, cnv));
+    setClickCount(0);
+    //triangle2(false)
+    drawPoint(getZoomedStartPos(tempStartPos, cnv));
+    handleClose();
   }
 
   function clear() {
@@ -317,48 +292,8 @@ function App() {
     setTriSize(event.target.value)
     
   }
+
   //resizes canvas. @opt = string with possible values: "in", "out", "reset"
-
-  function zoom2(opt="in", minSize=280, maxSize=1000) { 
-    const widthStr = wrapper.current.style.width    
-    const styleWidth = widthStr!==""?Number(widthStr.slice(0, widthStr.length - 2)):cnv.current.width+40
-    //console.log(styleWidth)
-    switch (opt) {
-      case "in": {
-        if (styleWidth < maxSize) {
-          wrapper.current.style.width = (styleWidth + 100) + 'px';
-          wrapper.current.style.height = (styleWidth + 100 + 40) + 'px';
-          
-        } else {
-          alert("Max zoom reached!")
-        }
-        break;
-      }
-      case "out": {
-        if (styleWidth > minSize) {
-          wrapper.current.style.width = (styleWidth - 100) + 'px';
-          wrapper.current.style.height = (styleWidth - 100 +40) + 'px';
-          
-        } else {
-          alert("Min zoom reached!")
-        }
-        break;
-      }
-      case "reset": {
-        wrapper.current.style.width = "";
-        wrapper.current.style.height = "";
-        break;
-      }
-      default: {
-        wrapper.current.style.width = "";
-        wrapper.current.style.height = "";
-        break;
-      }
-    }
-    //console.log(cnv.current.style.width, cnv.current.style.height)
-    
-  }
-
   function zoom(opt="in", minSize=240, maxSize=1000) { 
     const widthStr = cnv.current.style.width
     const styleWidth = widthStr!==""?Number(widthStr.slice(0, widthStr.length - 2)):cnv.current.width
@@ -394,8 +329,6 @@ function App() {
         break;
       }
     }
-    //console.log(cnv.current.style.width, cnv.current.style.height)
-    
   }
 
   function tooltip(target, placement="top", text="") {
@@ -409,9 +342,6 @@ function App() {
       </Overlay>
     )
   }
-
-  
-
   return (
     <div className='main-wrapper' data-bs-theme='light'>
 
@@ -424,22 +354,14 @@ function App() {
       {tooltip(slider_dots, "bottom", "Amount of dots")}
       {tooltip(slider_tri, "bottom", "Size of triangle")}
 
-      
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Warning!</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Are you sure you want to clear canvas and reset zoom?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Yes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-{/* pridetas tekstas patikrinti git ammend oi pakeiciau */}
+      {/* modal dialog */}      
+      {show && <Dialog 
+                  handleClearClick={handleClearClick} 
+                  handleClose={handleClose} 
+                  text={show} 
+                  confirmFunc={confirmFunc} 
+      />}
+
       <div className='main'>
         <Offcanvas show={showHelp} onHide={handleHelpClose} placement='start' >
           <Offcanvas.Header closeButton>
@@ -512,7 +434,7 @@ function App() {
               <button ref={btn_zoomout} disabled={working?true:false} className='start-btn' onClick={() => {zoom("out")}}><strong>-</strong></button>
               <button ref={btn_zoomin} disabled={working?true:false} className='start-btn' onClick={() => {zoom("in")}}><strong>+</strong></button>
             </div>
-            <button ref={btn_clear} disabled={working?true:false} className='start-btn back-red' onClick={() => {handleClearClick()}}><strong>x</strong></button>
+            <button ref={btn_clear} disabled={working?true:false} className='start-btn back-red' onClick={() => { handleShow("Are you sure you want to clear canvas and reset zoom?", handleClearClick) }}><strong>x</strong></button>
           </div>
         </div>
         

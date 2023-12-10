@@ -62,13 +62,13 @@ body, html, #root {
   justify-content: center;
   border-radius: 50%;
 }
-.start-btn:hover, .start-select:hover {
+.start-btn:hover, .start-select:hover, .btn:hover {
   box-shadow: inset 0px 0px 6px 2px #000;
   transition-timing-function: ease;
   transition-duration: 0.3s;
   transition-property: all;
 }
-.start-btn:focus, .start-select:focus {
+.start-btn:focus, .start-select:focus, .btn:focus {
   box-shadow: 0px 0px 6px 2px #000;
   transition-timing-function: ease;
   transition-duration: 0.3s;
@@ -167,4 +167,16 @@ body, html, #root {
 .txt12 {
   font-size: 12px;
   font-weight: 400;
+}
+
+/*************** Modal dialog ***************/
+.modal-content {
+  --bs-modal-bg: rgb(255, 213, 136);
+  --bs-modal-header-border-color:#000;
+  --bs-modal-footer-border-color: #000;
+  --bs-modal-footer-border-width:0;
+}
+.btn {
+  border: 1px solid #000 !important;
+  border-radius: 20px !important;
 }
