@@ -14,7 +14,6 @@ function Alert(props) {
           </Button>         
         </Modal.Footer>
       </Modal>
-
   )
 }
 
