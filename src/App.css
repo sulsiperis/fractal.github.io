@@ -180,3 +180,12 @@ body, html, #root {
   border: 1px solid #000 !important;
   border-radius: 20px !important;
 }
+.btn-secondary {
+  --bs-btn-color: #000 !important;
+  --bs-btn-bg: transparent !important;
+}
+.btn-primary { 
+  --bs-btn-color: #000 !important;
+  --bs-btn-bg: rgba(238, 52, 6, 0.9) !important;
+}
+

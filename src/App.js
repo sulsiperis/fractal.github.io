@@ -6,6 +6,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import Overlay from 'react-bootstrap//Overlay';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Dialog from './components/Dialog';
+import Alert from './components/Alert';
 
 function App() {
   const [dotNum, setDotNum] = React.useState(1)
@@ -21,6 +22,7 @@ function App() {
 
   const [show, setShow] = React.useState(false);
   const [confirmFunc, setConfirmFunc] = React.useState();
+  const [showAlert, setShowAlert] = React.useState(false);
 
   const handleClose = () => {
     setShow(false);
@@ -30,10 +32,15 @@ function App() {
     setShow(text);
     setConfirmFunc(()=> () => func);
   }
+  const handleShowAlert = (text) => {
+    setShowAlert(text);
+  }
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+   }
 
   const handleHelpClose = () => setShowHelp(false)
   const handleHelpShow = () => setShowHelp(true)
-
   
   const cnv = React.useRef()
   const wrapper = React.useRef()
@@ -51,7 +58,6 @@ function App() {
     
     cnv.current.addEventListener('click', function(evt) {    
         const mousePos = getMousePos(cnv.current, evt);
-        //console.log(startPos)
         if (!working) {          
           const tempPos = {x: mousePos.x, y: mousePos.y}
           setTempStartPos(tempPos)
@@ -87,7 +93,6 @@ function App() {
           setClickCount(0)
         }        
         setStartPos(getZoomedStartPos(tempStartPos, cnv))        
-        //triangle2(false)
         drawPoint(getZoomedStartPos(tempStartPos, cnv))
       }
     }  
@@ -102,7 +107,16 @@ function App() {
   React.useEffect(() => {
       resetTooltips()
   }, [showToolTips])
-  
+
+  //changing cursor to hourglass
+  React.useEffect(() => {
+    if (working) {
+      document.body.style.cursor = 'wait'
+    } else {
+      document.body.style.cursor = 'auto'
+    }
+  }, [working])
+
   function resetTooltips() {
     setTimeout(() => {
       setShowToolTips(false)
@@ -122,7 +136,6 @@ function App() {
         newStartPos = rawStartPos
       }
       return newStartPos
-
   }
 
   function resizeCanvas(initial=false) {
@@ -139,11 +152,8 @@ function App() {
     }
    
     if (new_width <= 630 && new_width >= 240)  {
-
       canv.width = new_width
       canv.height = new_height
-
-    // setWIndowWidth(window.innerWidth)
     } else {
       if (new_width < 240) {
         canv.width = 240
@@ -172,7 +182,6 @@ function App() {
       y: evt.clientY - rect.top
     };
   }
-
    
   function randVertex() {
     const vertex = Math.floor((Math.random() * 3)+1)
@@ -190,7 +199,6 @@ function App() {
       }
     }
   }
-
   
   function triangle2(visible=true) {    
     const cnt = clickCount + 1
@@ -216,8 +224,7 @@ function App() {
       
     }
     //t2.drawMedians()
-    //t2.drawCentroid()
-    
+    //t2.drawCentroid()    
   }
   function dots2(number=1000) {    
     if (startPos) {
@@ -255,13 +262,9 @@ function App() {
       countDown(number);
       ctx.closePath();
     } else {
-      alert("Mark a start point anywhere inside the triangle.")
-    }
-    
-    //console.log("finnished")
+      handleShowAlert("Mark a start point anywhere inside the triangle.")
+    }    
   }
-
-
 
   function handleClearClick() {
     clear(); 
@@ -304,7 +307,7 @@ function App() {
           cnv.current.style.height = widthStr !== ""?(styleWidth + 100) + 'px':(Number(cnv.current.width) + 100) + 'px';
           
         } else {
-          alert("Max zoom reached!")
+          handleShowAlert("Max zoom reached!")
         }
         break;
       }
@@ -314,7 +317,7 @@ function App() {
           cnv.current.style.height = widthStr !== ""?(styleWidth - 100) + 'px':(Number(cnv.current.width) - 100) + 'px';
           
         } else {
-          alert("Min zoom reached!")
+          handleShowAlert("Min zoom reached!")
         }
         break;
       }
@@ -361,7 +364,11 @@ function App() {
                   text={show} 
                   confirmFunc={confirmFunc} 
       />}
-
+      {/* modal message */}
+      {showAlert && <Alert                   
+                  handleClose={handleCloseAlert} 
+                  text={showAlert}
+      />}
       <div className='main'>
         <Offcanvas show={showHelp} onHide={handleHelpClose} placement='start' >
           <Offcanvas.Header closeButton>
